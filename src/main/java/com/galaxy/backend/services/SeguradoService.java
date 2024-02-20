@@ -7,8 +7,10 @@ import com.galaxy.backend.repositories.SeguradoRepository;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -41,11 +43,14 @@ public class SeguradoService {
             segurado.setName(data.name());
             segurado.setCpf_cnpj(data.cpf_cnpj());
             return seguradoMapper.toDTO(seguradoRepository.save(segurado));
-        }).orElse(null);
+        }).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
     public boolean delete(@NotNull @Positive Long id) {
-        seguradoRepository.delete(seguradoRepository.findById(id).orElseThrow(null));
-        return true;
+        if (seguradoRepository.existsById(id)) {
+            seguradoRepository.deleteById(id);
+            return true;
+        }
+        return false;
     }
 }

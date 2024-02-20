@@ -38,8 +38,7 @@ public class Segurado {
     public Segurado() {
     }
 
-    public Segurado(Long id, String name, String cpf_cnpj, Status status) {
-        this.id = id;
+    public Segurado(String name, String cpf_cnpj, Status status) {
         this.name = name;
         this.cpf_cnpj = cpf_cnpj;
         this.status = status;

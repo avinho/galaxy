@@ -1,25 +1,18 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:testdb
-    username: sa
-    password: password
-    driver-class-name: org.h2.Driver
+    url: jdbc:postgresql://localhost:5432/galaxy
+    username: admin
+    password: 123
   jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
-    open-in-view: true
     defer-datasource-initialization: true
     hibernate:
-      ddl-auto: update
-    show-sql: true
+      ddl-auto: create
     properties:
       hibernate:
-        format_sql: true
-  h2:
-    console:
-      enabled: true
+        show-sql: true
+        format-sql: true
+
 server:
   error:
     include-stacktrace: never
     include-message: never
-  servlet:
-      context-path: /api/v1

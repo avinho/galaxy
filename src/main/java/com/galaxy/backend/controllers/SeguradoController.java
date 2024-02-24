@@ -1,8 +1,12 @@
 package com.galaxy.backend.controllers;
 
 import com.galaxy.backend.dtos.SeguradoDTO;
+import com.galaxy.backend.dtos.SeguradoPageDTO;
 import com.galaxy.backend.models.Segurado;
 import com.galaxy.backend.services.SeguradoService;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping( "api/segurados")
+@CrossOrigin(origins = "http://localhost:4200")
 public class SeguradoController {
 
     private final SeguradoService seguradoService;
@@ -24,9 +29,14 @@ public class SeguradoController {
         return ResponseEntity.status(HttpStatus.CREATED).body(seguradoService.save(data));
     }
 
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<List<Segurado>> getAll() {
         return ResponseEntity.ok(seguradoService.findAll());
+    }
+
+    @GetMapping
+    public ResponseEntity<SeguradoPageDTO> list(@RequestParam(defaultValue = "0") @PositiveOrZero int pageNumber, @RequestParam(defaultValue = "10") @Positive @Max(100) int pageSize) {
+        return ResponseEntity.ok(seguradoService.listAll(pageNumber, pageSize));
     }
 
     @GetMapping("/{id}")

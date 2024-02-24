@@ -6,11 +6,12 @@ spring:
   jpa:
     defer-datasource-initialization: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         show-sql: true
         format-sql: true
+    open-in-view: true
 
 server:
   error:

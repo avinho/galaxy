@@ -1,12 +1,15 @@
 package com.galaxy.backend.services;
 
 import com.galaxy.backend.dtos.SeguradoDTO;
+import com.galaxy.backend.dtos.SeguradoPageDTO;
 import com.galaxy.backend.dtos.mapper.SeguradoMapper;
 import com.galaxy.backend.models.Segurado;
 import com.galaxy.backend.repositories.SeguradoRepository;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -36,6 +39,20 @@ public class SeguradoService {
 
     public List<Segurado> findAll() {
         return seguradoRepository.findAll();
+    }
+
+    public SeguradoPageDTO listAll(int pageNumber, int pageSize) {
+        long totalElements = seguradoRepository.count();
+
+        if (pageNumber > 0 && pageSize > totalElements) {
+            Page<Segurado> page = seguradoRepository.findAll(PageRequest.of(0, pageSize));
+            List<SeguradoDTO> segurados = page.getContent().stream().map(seguradoMapper::toDTO).toList();
+            return new SeguradoPageDTO(segurados, page.getTotalPages(), page.getTotalElements());
+        }
+
+        Page<Segurado> page = seguradoRepository.findAll(PageRequest.of(pageNumber, pageSize));
+        List<SeguradoDTO> segurados = page.getContent().stream().map(seguradoMapper::toDTO).toList();
+        return new SeguradoPageDTO(segurados, page.getTotalPages(), page.getTotalElements());
     }
 
     public SeguradoDTO update(@NotNull @Positive Long id, @Valid @NotNull SeguradoDTO data) {

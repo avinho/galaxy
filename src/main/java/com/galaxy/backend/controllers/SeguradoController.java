@@ -39,6 +39,11 @@ public class SeguradoController {
         return ResponseEntity.ok(seguradoService.listAll(pageNumber, pageSize));
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<SeguradoPageDTO> listByName(@RequestParam String name, @RequestParam(defaultValue = "0") @PositiveOrZero int pageNumber, @RequestParam(defaultValue = "10") @Positive @Max(100) int pageSize) {
+        return ResponseEntity.ok(seguradoService.searchByName(name, pageNumber, pageSize));
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<SeguradoDTO> getById(@PathVariable Long id) {
         return ResponseEntity.ok(seguradoService.findById(id));

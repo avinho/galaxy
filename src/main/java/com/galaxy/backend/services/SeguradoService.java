@@ -55,6 +55,20 @@ public class SeguradoService {
         return new SeguradoPageDTO(segurados, page.getTotalPages(), page.getTotalElements());
     }
 
+    public SeguradoPageDTO searchByName(String name, int pageNumber, int pageSize) {
+        long totalElements = seguradoRepository.count();
+
+        if (pageNumber > 0 && pageSize > totalElements) {
+            Page<Segurado> page = seguradoRepository.findSeguradoByNameContainingIgnoreCase(name, PageRequest.of(0, pageSize));
+            List<SeguradoDTO> segurados = page.getContent().stream().map(seguradoMapper::toDTO).toList();
+            return new SeguradoPageDTO(segurados, page.getTotalPages(), page.getTotalElements());
+        }
+
+        Page<Segurado> page = seguradoRepository.findSeguradoByNameContainingIgnoreCase(name, PageRequest.of(pageNumber, pageSize));
+        List<SeguradoDTO> segurados = page.getContent().stream().map(seguradoMapper::toDTO).toList();
+        return new SeguradoPageDTO(segurados, page.getTotalPages(), page.getTotalElements());
+    }
+
     public SeguradoDTO update(@NotNull @Positive Long id, @Valid @NotNull SeguradoDTO data) {
         return seguradoRepository.findById(id).map(segurado -> {
             segurado.setName(data.name());

@@ -34,7 +34,7 @@ public class SeguradoService {
     }
 
     public SeguradoDTO findById(@NotNull @Positive Long id) {
-        return seguradoRepository.findById(id).map(seguradoMapper::toDTO).orElseThrow(null);
+        return seguradoRepository.findById(id).map(seguradoMapper::toDTO).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
     public List<Segurado> findAll() {

@@ -9,13 +9,17 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 import org.hibernate.validator.constraints.Length;
 
+import java.util.Objects;
+
 @Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "tipo", discriminatorType = DiscriminatorType.STRING)
 @SQLDelete(sql = "UPDATE Segurado SET status = 'Inactive' WHERE id = ?")
 @SQLRestriction("status = 'Active'")
 public class Segurado {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotNull
@@ -26,9 +30,12 @@ public class Segurado {
 
     @NotNull
     @NotBlank
-    @Length(min = 11, max = 14)
-    @Column(length = 14, nullable = false)
-    private String cpf_cnpj;
+    @Length(min = 11 , max = 14)
+    @Column(length = 14, nullable = false, unique = true)
+    private String document;
+
+    @Column(insertable = false, updatable = false, nullable = false)
+    private String tipo;
 
     @NotNull
     @Column(length = 10, nullable = false)
@@ -38,10 +45,9 @@ public class Segurado {
     public Segurado() {
     }
 
-    public Segurado(String name, String cpf_cnpj, Status status) {
+    public Segurado(String name, String document) {
         this.name = name;
-        this.cpf_cnpj = cpf_cnpj;
-        this.status = status;
+        this.document = document;
     }
 
     public Long getId() {
@@ -60,14 +66,6 @@ public class Segurado {
         this.name = name;
     }
 
-    public String getCpf_cnpj() {
-        return cpf_cnpj;
-    }
-
-    public void setCpf_cnpj(String cpf_cnpj) {
-        this.cpf_cnpj = cpf_cnpj;
-    }
-
     public Status getStatus() {
         return status;
     }
@@ -76,13 +74,43 @@ public class Segurado {
         this.status = status;
     }
 
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipoSegurado) {
+        this.tipo = tipoSegurado;
+    }
+
+    public String getDocument() {
+        return document;
+    }
+
+    public void setDocument(String document) {
+        this.document = document;
+    }
+
     @Override
     public String toString() {
         return "Segurado{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", cpf_cnpj='" + cpf_cnpj + '\'' +
-                ", status='" + status + '\'' +
+                ", document='" + document + '\'' +
+                ", tipo='" + tipo + '\'' +
+                ", status=" + status +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Segurado segurado = (Segurado) o;
+        return Objects.equals(id, segurado.id) && Objects.equals(name, segurado.name) && Objects.equals(document, segurado.document) && Objects.equals(tipo, segurado.tipo) && status == segurado.status;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, document, tipo, status);
     }
 }

@@ -1,8 +1,9 @@
 package com.galaxy.backend.controllers;
 
+import com.galaxy.backend.dtos.PessoaFisicaDTO;
+import com.galaxy.backend.dtos.PessoaJuridicaDTO;
 import com.galaxy.backend.dtos.SeguradoDTO;
 import com.galaxy.backend.dtos.SeguradoPageDTO;
-import com.galaxy.backend.models.Segurado;
 import com.galaxy.backend.services.SeguradoService;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Positive;
@@ -24,13 +25,23 @@ public class SeguradoController {
         this.seguradoService = seguradoService;
     }
 
-    @PostMapping
-    public ResponseEntity<SeguradoDTO> create(@RequestBody SeguradoDTO data) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(seguradoService.save(data));
+    @PostMapping("/new/pf")
+    public ResponseEntity<PessoaFisicaDTO> createPF(@RequestBody PessoaFisicaDTO data) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(seguradoService.savePF(data));
+    }
+
+    @PostMapping("/new/pj")
+    public ResponseEntity<PessoaJuridicaDTO> createPJ(@RequestBody PessoaJuridicaDTO data) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(seguradoService.savePJ(data));
+    }
+
+    @GetMapping("/tipo")
+    public ResponseEntity<List<PessoaFisicaDTO>> getByTipo(@RequestParam String query) {
+        return ResponseEntity.ok(seguradoService.findSeguradoByTipoPF(query));
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<Segurado>> getAll() {
+    public ResponseEntity<List<SeguradoDTO>> getAll() {
         return ResponseEntity.ok(seguradoService.findAll());
     }
 

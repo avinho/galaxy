@@ -1,5 +1,7 @@
 package com.galaxy.backend.services;
 
+import com.galaxy.backend.dtos.PessoaFisicaDTO;
+import com.galaxy.backend.dtos.PessoaJuridicaDTO;
 import com.galaxy.backend.dtos.SeguradoDTO;
 import com.galaxy.backend.dtos.SeguradoPageDTO;
 import com.galaxy.backend.dtos.mapper.SeguradoMapper;
@@ -22,23 +24,29 @@ import java.util.List;
 public class SeguradoService {
 
     private final SeguradoRepository seguradoRepository;
-    private final SeguradoMapper seguradoMapper;
 
-    public SeguradoService(SeguradoRepository seguradoRepository, SeguradoMapper seguradoMapper) {
+    public SeguradoService(SeguradoRepository seguradoRepository) {
         this.seguradoRepository = seguradoRepository;
-        this.seguradoMapper = seguradoMapper;
     }
 
-    public SeguradoDTO save(SeguradoDTO data) {
-        return seguradoMapper.toDTO(seguradoRepository.save(seguradoMapper.toEntity(data)));
+    public PessoaFisicaDTO savePF(PessoaFisicaDTO data) {
+        return SeguradoMapper.INSTANCE.toDTO(seguradoRepository.save(SeguradoMapper.INSTANCE.toEntity(data)));
+    }
+
+    public PessoaJuridicaDTO savePJ(PessoaJuridicaDTO data) {
+        return SeguradoMapper.INSTANCE.toDTO(seguradoRepository.save(SeguradoMapper.INSTANCE.toEntity(data)));
     }
 
     public SeguradoDTO findById(@NotNull @Positive Long id) {
-        return seguradoRepository.findById(id).map(seguradoMapper::toDTO).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        return seguradoRepository.findById(id).map(SeguradoMapper.INSTANCE::toDTO).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
-    public List<Segurado> findAll() {
-        return seguradoRepository.findAll();
+    public List<SeguradoDTO> findAll() {
+        return seguradoRepository.findAll().stream().map(SeguradoMapper.INSTANCE::toDTO).toList();
+    }
+
+    public List<PessoaFisicaDTO> findSeguradoByTipoPF(String tipo) {
+        return seguradoRepository.findSeguradoByTipoIgnoreCase(tipo).stream().map(SeguradoMapper.INSTANCE::toDTO).toList();
     }
 
     public SeguradoPageDTO listAll(int pageNumber, int pageSize) {
@@ -46,12 +54,12 @@ public class SeguradoService {
 
         if (pageNumber > 0 && pageSize > totalElements) {
             Page<Segurado> page = seguradoRepository.findAll(PageRequest.of(0, pageSize));
-            List<SeguradoDTO> segurados = page.getContent().stream().map(seguradoMapper::toDTO).toList();
+            List<SeguradoDTO> segurados = page.getContent().stream().map(SeguradoMapper.INSTANCE::toDTO).toList();
             return new SeguradoPageDTO(segurados, page.getTotalPages(), page.getTotalElements());
         }
 
         Page<Segurado> page = seguradoRepository.findAll(PageRequest.of(pageNumber, pageSize));
-        List<SeguradoDTO> segurados = page.getContent().stream().map(seguradoMapper::toDTO).toList();
+        List<SeguradoDTO> segurados = page.getContent().stream().map(SeguradoMapper.INSTANCE::toDTO).toList();
         return new SeguradoPageDTO(segurados, page.getTotalPages(), page.getTotalElements());
     }
 
@@ -60,20 +68,20 @@ public class SeguradoService {
 
         if (pageNumber > 0 && pageSize > totalElements) {
             Page<Segurado> page = seguradoRepository.findSeguradoByNameContainingIgnoreCase(name, PageRequest.of(0, pageSize));
-            List<SeguradoDTO> segurados = page.getContent().stream().map(seguradoMapper::toDTO).toList();
+            List<SeguradoDTO> segurados = page.getContent().stream().map(SeguradoMapper.INSTANCE::toDTO).toList();
             return new SeguradoPageDTO(segurados, page.getTotalPages(), page.getTotalElements());
         }
 
         Page<Segurado> page = seguradoRepository.findSeguradoByNameContainingIgnoreCase(name, PageRequest.of(pageNumber, pageSize));
-        List<SeguradoDTO> segurados = page.getContent().stream().map(seguradoMapper::toDTO).toList();
+        List<SeguradoDTO> segurados = page.getContent().stream().map(SeguradoMapper.INSTANCE::toDTO).toList();
         return new SeguradoPageDTO(segurados, page.getTotalPages(), page.getTotalElements());
     }
 
     public SeguradoDTO update(@NotNull @Positive Long id, @Valid @NotNull SeguradoDTO data) {
         return seguradoRepository.findById(id).map(segurado -> {
             segurado.setName(data.name());
-            segurado.setCpf_cnpj(data.cpf_cnpj());
-            return seguradoMapper.toDTO(seguradoRepository.save(segurado));
+            //segurado.setCpf_cnpj(data.cpf_cnpj());
+            return SeguradoMapper.INSTANCE.toDTO(seguradoRepository.save(segurado));
         }).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 

@@ -25,12 +25,12 @@ public class SeguradoController {
         this.seguradoService = seguradoService;
     }
 
-    @PostMapping("/new/pf")
+    @PostMapping("/pf")
     public ResponseEntity<PessoaFisicaDTO> createPF(@RequestBody PessoaFisicaDTO data) {
         return ResponseEntity.status(HttpStatus.CREATED).body(seguradoService.savePF(data));
     }
 
-    @PostMapping("/new/pj")
+    @PostMapping("/pj")
     public ResponseEntity<PessoaJuridicaDTO> createPJ(@RequestBody PessoaJuridicaDTO data) {
         return ResponseEntity.status(HttpStatus.CREATED).body(seguradoService.savePJ(data));
     }

@@ -36,8 +36,8 @@ public class SeguradoController {
     }
 
     @GetMapping("/tipo")
-    public ResponseEntity<List<PessoaFisicaDTO>> getByTipo(@RequestParam String query) {
-        return ResponseEntity.ok(seguradoService.findSeguradoByTipoPF(query));
+    public ResponseEntity<List<?>> getByTipo(@RequestParam String query) {
+        return ResponseEntity.ok(seguradoService.findSeguradoByTipo(query));
     }
 
     @GetMapping("/all")

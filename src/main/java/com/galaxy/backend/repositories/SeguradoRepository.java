@@ -1,6 +1,5 @@
 package com.galaxy.backend.repositories;
 
-import com.galaxy.backend.models.PessoaFisica;
 import com.galaxy.backend.models.Segurado;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,5 +11,7 @@ public interface SeguradoRepository extends JpaRepository<Segurado, Long> {
 
     Page<Segurado> findSeguradoByNameContainingIgnoreCase(String name, Pageable pageable);
 
-    List<PessoaFisica> findSeguradoByTipoIgnoreCase(String tipo);
+    List<Segurado> findSeguradoByTipoIgnoreCase(String tipo);
+
+    long countByTipoIgnoreCase(String tipo);
 }

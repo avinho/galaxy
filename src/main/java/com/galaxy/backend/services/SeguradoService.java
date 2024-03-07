@@ -45,42 +45,27 @@ public class SeguradoService {
         return seguradoRepository.findAll().stream().map(SeguradoMapper.INSTANCE::toDTO).toList();
     }
 
-    public List<PessoaFisicaDTO> findSeguradoByTipoPF(String tipo) {
+    public List<?> findSeguradoByTipo(String tipo) {
         return seguradoRepository.findSeguradoByTipoIgnoreCase(tipo).stream().map(SeguradoMapper.INSTANCE::toDTO).toList();
     }
-
-    public SeguradoPageDTO listAll(int pageNumber, int pageSize) {
-        long totalElements = seguradoRepository.count();
-
-        if (pageNumber > 0 && pageSize > totalElements) {
-            Page<Segurado> page = seguradoRepository.findAll(PageRequest.of(0, pageSize));
-            List<SeguradoDTO> segurados = page.getContent().stream().map(SeguradoMapper.INSTANCE::toDTO).toList();
-            return new SeguradoPageDTO(segurados, page.getTotalPages(), page.getTotalElements());
-        }
-
-        Page<Segurado> page = seguradoRepository.findAll(PageRequest.of(pageNumber, pageSize));
+    private SeguradoPageDTO listSegurados(String name, int pageNumber, int pageSize) {
+        Page<Segurado> page = (name != null) ? seguradoRepository.findSeguradoByNameContainingIgnoreCase(name, PageRequest.of(pageNumber, pageSize)) : seguradoRepository.findAll(PageRequest.of(pageNumber, pageSize));
         List<SeguradoDTO> segurados = page.getContent().stream().map(SeguradoMapper.INSTANCE::toDTO).toList();
-        return new SeguradoPageDTO(segurados, page.getTotalPages(), page.getTotalElements());
+        long pfCount = seguradoRepository.countByTipoIgnoreCase("pf");
+        long pjCount = seguradoRepository.countByTipoIgnoreCase("pj");
+        return new SeguradoPageDTO(segurados, page.getTotalPages(), page.getTotalElements(), pfCount, pjCount);
+    }
+    public SeguradoPageDTO listAll(int pageNumber, int pageSize) {
+        return listSegurados(null, pageNumber, pageSize);
     }
 
     public SeguradoPageDTO searchByName(String name, int pageNumber, int pageSize) {
-        long totalElements = seguradoRepository.count();
-
-        if (pageNumber > 0 && pageSize > totalElements) {
-            Page<Segurado> page = seguradoRepository.findSeguradoByNameContainingIgnoreCase(name, PageRequest.of(0, pageSize));
-            List<SeguradoDTO> segurados = page.getContent().stream().map(SeguradoMapper.INSTANCE::toDTO).toList();
-            return new SeguradoPageDTO(segurados, page.getTotalPages(), page.getTotalElements());
-        }
-
-        Page<Segurado> page = seguradoRepository.findSeguradoByNameContainingIgnoreCase(name, PageRequest.of(pageNumber, pageSize));
-        List<SeguradoDTO> segurados = page.getContent().stream().map(SeguradoMapper.INSTANCE::toDTO).toList();
-        return new SeguradoPageDTO(segurados, page.getTotalPages(), page.getTotalElements());
+        return listSegurados(name, pageNumber, pageSize);
     }
 
     public SeguradoDTO update(@NotNull @Positive Long id, @Valid @NotNull SeguradoDTO data) {
         return seguradoRepository.findById(id).map(segurado -> {
             segurado.setName(data.name());
-            //segurado.setCpf_cnpj(data.cpf_cnpj());
             return SeguradoMapper.INSTANCE.toDTO(seguradoRepository.save(segurado));
         }).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }

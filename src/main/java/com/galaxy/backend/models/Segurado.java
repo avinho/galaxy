@@ -37,6 +37,10 @@ public class Segurado {
     @Column(insertable = false, updatable = false, nullable = false)
     private String tipo;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "address_id", referencedColumnName = "id")
+    private Address address;
+
     @NotNull
     @Column(length = 10, nullable = false)
     @Convert(converter = StatusConverter.class)
@@ -88,6 +92,14 @@ public class Segurado {
 
     public void setDocument(String document) {
         this.document = document;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
     }
 
     @Override

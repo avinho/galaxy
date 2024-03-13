@@ -11,8 +11,8 @@ import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Component;
 
-@Component
 @Mapper
+@Component
 public interface SeguradoMapper {
 
     SeguradoMapper INSTANCE = Mappers.getMapper(SeguradoMapper.class);

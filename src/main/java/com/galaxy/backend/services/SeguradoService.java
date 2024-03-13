@@ -5,7 +5,9 @@ import com.galaxy.backend.dtos.PessoaJuridicaDTO;
 import com.galaxy.backend.dtos.SeguradoDTO;
 import com.galaxy.backend.dtos.SeguradoPageDTO;
 import com.galaxy.backend.dtos.mapper.SeguradoMapper;
+import com.galaxy.backend.models.Address;
 import com.galaxy.backend.models.Segurado;
+import com.galaxy.backend.repositories.AddressRepository;
 import com.galaxy.backend.repositories.SeguradoRepository;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -23,9 +25,12 @@ import java.util.List;
 @Validated
 public class SeguradoService {
 
-    private final SeguradoRepository seguradoRepository;
 
-    public SeguradoService(SeguradoRepository seguradoRepository) {
+    private final SeguradoRepository seguradoRepository;
+    private final AddressRepository addressRepository;
+
+    public SeguradoService(SeguradoRepository seguradoRepository, AddressRepository addressRepository) {
+        this.addressRepository = addressRepository;
         this.seguradoRepository = seguradoRepository;
     }
 
@@ -66,6 +71,33 @@ public class SeguradoService {
     public SeguradoDTO update(@NotNull @Positive Long id, @Valid @NotNull SeguradoDTO data) {
         return seguradoRepository.findById(id).map(segurado -> {
             segurado.setName(data.name());
+            segurado.setDocument(data.document());
+            segurado.setAddress(data.address());
+
+            return SeguradoMapper.INSTANCE.toDTO(seguradoRepository.save(segurado));
+        }).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    }
+
+    public SeguradoDTO updateAddress(@NotNull @Positive Long id, @Valid @NotNull Address data) {
+        return seguradoRepository.findById(id).map(segurado -> {
+            var address = segurado.getAddress();
+            if (address == null) {
+                segurado.setAddress(data);
+                return SeguradoMapper.INSTANCE.toDTO(seguradoRepository.save(segurado));
+            }
+            var addressFound = addressRepository.findById(address.getId()).map(result -> {
+                result.setCep(data.getCep());
+                result.setStreet(data.getStreet());
+                result.setNumber(data.getNumber());
+                result.setComplement(data.getComplement());
+                result.setNeighborhood(data.getNeighborhood());
+                result.setCity(data.getCity());
+                result.setState(data.getState());
+                result.setCountry(data.getCountry());
+                return addressRepository.save(result);
+            }).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+            segurado.setAddress(addressFound);
             return SeguradoMapper.INSTANCE.toDTO(seguradoRepository.save(segurado));
         }).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }

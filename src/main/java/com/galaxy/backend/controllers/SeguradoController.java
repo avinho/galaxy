@@ -3,6 +3,7 @@ package com.galaxy.backend.controllers;
 import com.galaxy.backend.dtos.SeguradoDTO;
 import com.galaxy.backend.dtos.SeguradoPageDTO;
 import com.galaxy.backend.models.Address;
+import com.galaxy.backend.models.Corretor;
 import com.galaxy.backend.services.SeguradoService;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Positive;
@@ -23,8 +24,6 @@ public class SeguradoController {
         this.seguradoService = seguradoService;
     }
 
-
-
     @GetMapping("/tipo")
     public ResponseEntity<List<?>> getByTipo(@RequestParam String query) {
         return ResponseEntity.ok(seguradoService.findSeguradoByTipo(query));
@@ -38,6 +37,11 @@ public class SeguradoController {
     @PatchMapping("/{id}/address")
     public ResponseEntity<SeguradoDTO> updateAddress(@PathVariable Long id, @RequestBody Address data) {
         return ResponseEntity.ok(seguradoService.updateAddress(id, data));
+    }
+
+    @PatchMapping("/{id}/corretor")
+    public ResponseEntity<SeguradoDTO> updateCorretor(@PathVariable Long id, @RequestBody Corretor data) {
+        return ResponseEntity.ok(seguradoService.updateCorretor(id, data));
     }
 
     @GetMapping("/all")

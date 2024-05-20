@@ -6,12 +6,15 @@ import com.galaxy.backend.dtos.SeguradoDTO;
 import com.galaxy.backend.dtos.SeguradoPageDTO;
 import com.galaxy.backend.dtos.mapper.SeguradoMapper;
 import com.galaxy.backend.models.Address;
+import com.galaxy.backend.models.Corretor;
 import com.galaxy.backend.models.Segurado;
 import com.galaxy.backend.repositories.AddressRepository;
+import com.galaxy.backend.repositories.CorretorRepository;
 import com.galaxy.backend.repositories.SeguradoRepository;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
@@ -25,13 +28,15 @@ import java.util.List;
 @Validated
 public class SeguradoService {
 
-
     private final SeguradoRepository seguradoRepository;
     private final AddressRepository addressRepository;
+    private final CorretorRepository corretorRepository;
 
-    public SeguradoService(SeguradoRepository seguradoRepository, AddressRepository addressRepository) {
+    @Autowired
+    public SeguradoService(SeguradoRepository seguradoRepository, AddressRepository addressRepository, CorretorRepository corretorRepository) {
         this.addressRepository = addressRepository;
         this.seguradoRepository = seguradoRepository;
+        this.corretorRepository = corretorRepository;
     }
 
     public PessoaFisicaDTO savePF(PessoaFisicaDTO data) {
@@ -98,6 +103,18 @@ public class SeguradoService {
             }).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
             segurado.setAddress(addressFound);
+            return SeguradoMapper.INSTANCE.toDTO(seguradoRepository.save(segurado));
+        }).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    }
+
+    public SeguradoDTO updateCorretor(@NotNull @Positive Long id, @Valid @NotNull Corretor data) {
+        return seguradoRepository.findById(id).map(segurado -> {
+            if (segurado.getCorretor() == null) {
+                segurado.setCorretor(data);
+                return SeguradoMapper.INSTANCE.toDTO(seguradoRepository.save(segurado));
+            }
+            var corretorFound = corretorRepository.findById(data.getId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+            segurado.setCorretor(corretorFound);
             return SeguradoMapper.INSTANCE.toDTO(seguradoRepository.save(segurado));
         }).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }

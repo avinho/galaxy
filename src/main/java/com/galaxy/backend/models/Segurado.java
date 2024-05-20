@@ -41,6 +41,10 @@ public class Segurado {
     @JoinColumn(name = "address_id", referencedColumnName = "id")
     private Address address;
 
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "corretor_id", referencedColumnName = "id")
+    private Corretor corretor;
+
     @NotNull
     @Column(length = 10, nullable = false)
     @Convert(converter = StatusConverter.class)
@@ -52,6 +56,14 @@ public class Segurado {
     public Segurado(String name, String document) {
         this.name = name;
         this.document = document;
+    }
+
+    public Segurado(String name, String document, String tipo, Address address, Corretor corretor) {
+        this.name = name;
+        this.document = document;
+        this.tipo = tipo;
+        this.address = address;
+        this.corretor = corretor;
     }
 
     public Long getId() {
@@ -102,15 +114,12 @@ public class Segurado {
         this.address = address;
     }
 
-    @Override
-    public String toString() {
-        return "Segurado{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", document='" + document + '\'' +
-                ", tipo='" + tipo + '\'' +
-                ", status=" + status +
-                '}';
+    public Corretor getCorretor() {
+        return corretor;
+    }
+
+    public void setCorretor(Corretor corretor) {
+        this.corretor = corretor;
     }
 
     @Override
@@ -118,11 +127,24 @@ public class Segurado {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Segurado segurado = (Segurado) o;
-        return Objects.equals(id, segurado.id) && Objects.equals(name, segurado.name) && Objects.equals(document, segurado.document) && Objects.equals(tipo, segurado.tipo) && status == segurado.status;
+        return Objects.equals(id, segurado.id) && Objects.equals(name, segurado.name) && Objects.equals(document, segurado.document) && Objects.equals(tipo, segurado.tipo) && Objects.equals(address, segurado.address) && Objects.equals(corretor, segurado.corretor) && status == segurado.status;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, document, tipo, status);
+        return Objects.hash(id, name, document, tipo, address, corretor, status);
+    }
+
+    @Override
+    public String toString() {
+        return "Segurado{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", document='" + document + '\'' +
+                ", tipo='" + tipo + '\'' +
+                ", address=" + address +
+                ", corretor=" + corretor +
+                ", status=" + status +
+                '}';
     }
 }

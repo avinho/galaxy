@@ -9,11 +9,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/producao")
+@RequestMapping("api/financeiro/producao")
 @CrossOrigin(origins = "*")
 public class ProducaoController {
 
@@ -48,6 +49,20 @@ public class ProducaoController {
         });
 
         return ResponseEntity.ok(producaoService.saveAll(prods));
+    }
+
+    @GetMapping("/searchByName")
+    public ResponseEntity<List<Producao>> findAllByCorretora(@RequestParam String corretora) {
+        return ResponseEntity.ok(producaoService.getByCorretora(corretora));
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<Producao>> search(
+            @RequestParam String corretora,
+            @RequestParam LocalDate startDate,
+            @RequestParam LocalDate endDate) {
+        List<Producao> producoes = producaoService.searchByCorretoraAndDateRange(corretora, startDate, endDate);
+        return ResponseEntity.ok(producoes);
     }
 
     @DeleteMapping("/all")

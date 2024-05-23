@@ -9,6 +9,7 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 import org.hibernate.validator.constraints.Length;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
@@ -16,7 +17,7 @@ import java.util.Objects;
 @DiscriminatorColumn(name = "tipo", discriminatorType = DiscriminatorType.STRING)
 @SQLDelete(sql = "UPDATE Segurado SET status = 'Inactive' WHERE id = ?")
 @SQLRestriction("status = 'Active'")
-public class Segurado {
+public class Segurado implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

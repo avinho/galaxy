@@ -1,17 +1,15 @@
 package com.galaxy.backend.services;
 
-import java.util.List;
-
+import com.galaxy.backend.models.Corretor;
+import com.galaxy.backend.repositories.CorretorRepository;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.galaxy.backend.models.Corretor;
-import com.galaxy.backend.repositories.CorretorRepository;
-
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import java.util.List;
 
 @Service
 public class CorretorService {
@@ -31,7 +29,7 @@ public class CorretorService {
     }
 
     /*
-    TODO Melhorar retorno de erro caso não localize.
+    TODO Melhorar retorno de erro caso n?o localize.
      */
     public Corretor findById(Long id) {
         return corretorRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));

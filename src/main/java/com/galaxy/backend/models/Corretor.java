@@ -3,12 +3,13 @@ package com.galaxy.backend.models;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 @Entity
-public class Corretor {
+public class Corretor implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

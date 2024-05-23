@@ -14,7 +14,6 @@ import com.galaxy.backend.repositories.SeguradoRepository;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
@@ -32,7 +31,6 @@ public class SeguradoService {
     private final AddressRepository addressRepository;
     private final CorretorRepository corretorRepository;
 
-    @Autowired
     public SeguradoService(SeguradoRepository seguradoRepository, AddressRepository addressRepository, CorretorRepository corretorRepository) {
         this.addressRepository = addressRepository;
         this.seguradoRepository = seguradoRepository;

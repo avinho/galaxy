@@ -2,9 +2,7 @@ package com.galaxy.backend.services;
 
 import com.galaxy.backend.dtos.SaldoCorretorDTO;
 import com.galaxy.backend.dtos.SaldoSeguradoraDTO;
-import com.galaxy.backend.models.Corretor;
 import com.galaxy.backend.models.Seguradora;
-import org.apache.commons.collections4.list.TreeList;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
@@ -27,21 +25,23 @@ public class ReadExcel {
     private CorretorService corretorService;
 
     private static final DataFormatter formatter = new DataFormatter();
-    private static final Pattern pattern = Pattern.compile("[^a-zA-Z]");
+    private static final Pattern PATTERN = Pattern.compile("[^a-zA-Z]");
 
     /**
      * Método para ler um arquivo Excel e processar seus dados.
      *
      * @param tempFile O caminho do arquivo Excel a ser lido.
+     * @return 
      */
     public List<SaldoCorretorDTO> readExcel(File tempFile) {
         try(FileInputStream file = new FileInputStream(tempFile)) {
-            HSSFWorkbook workbook = new HSSFWorkbook(file);
-            HSSFSheet sheet = workbook.getSheetAt(0);
-            Map<String, List<Row>> map = processSheet(sheet);
-            List<SaldoCorretorDTO> saldoCorretores = new ArrayList<>();
-
-            map.forEach((corretor, rows) -> saldoCorretores.add(processRows(corretor, rows)));
+            List<SaldoCorretorDTO> saldoCorretores;
+            try (HSSFWorkbook workbook = new HSSFWorkbook(file)) {
+                HSSFSheet sheet = workbook.getSheetAt(0);
+                Map<String, List<Row>> map = processSheet(sheet);
+                saldoCorretores = new ArrayList<>();
+                map.forEach((corretor, rows) -> saldoCorretores.add(processRows(corretor, rows)));
+            }
             return saldoCorretores;
         } catch (IOException e) {
             e.printStackTrace();
@@ -75,7 +75,7 @@ public class ReadExcel {
             Row nextRow = sheet.getRow(endRow + 1);
             var num = nextRow.getLastCellNum() - 1;
             Cell cell = nextRow.getCell(num);
-            String corretor = pattern.matcher(cell.getStringCellValue()).replaceAll("");
+            String corretor = PATTERN.matcher(cell.getStringCellValue()).replaceAll("");
 
             switch (corretor) {
                 case "IGOMATOS" -> corretor = "IGO MATOS";

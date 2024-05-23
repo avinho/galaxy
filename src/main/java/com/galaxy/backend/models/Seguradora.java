@@ -1,10 +1,13 @@
 package com.galaxy.backend.models;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Seguradora {
+public class Seguradora implements Serializable {
     private String nome;
     private Integer quantidade = 0;
+    private double alicota;
+    private boolean retemImposto = false;
     private double saldo = 0;
     private double estornos = 0;
     private double creditos = 0;
@@ -17,6 +20,17 @@ public class Seguradora {
         this.nome = nome;
     }
 
+    public Seguradora(String nome, Integer quantidade, double alicota, boolean retemImposto, double saldo, double estornos, double creditos, double premioLiquido) {
+        this.nome = nome;
+        this.quantidade = quantidade;
+        this.alicota = alicota;
+        this.retemImposto = retemImposto;
+        this.saldo = saldo;
+        this.estornos = estornos;
+        this.creditos = creditos;
+        this.premioLiquido = premioLiquido;
+    }
+
     public Seguradora(String nome, Integer quantidade, Double saldo, Double estornos, Double creditos, Double premioLiquido) {
         this.nome = nome;
         this.quantidade = quantidade;
@@ -24,6 +38,22 @@ public class Seguradora {
         this.estornos = estornos;
         this.creditos = creditos;
         this.premioLiquido = premioLiquido;
+    }
+
+    public double getAlicota() {
+        return alicota;
+    }
+
+    public void setAlicota(double alicota) {
+        this.alicota = alicota;
+    }
+
+    public boolean isRetemImposto() {
+        return retemImposto;
+    }
+
+    public void setRetemImposto(boolean retemImposto) {
+        this.retemImposto = retemImposto;
     }
 
     public void addSaldo(Double valor) {
@@ -96,6 +126,8 @@ public class Seguradora {
         return "Seguradora{" +
                 "nome='" + nome + '\'' +
                 ", quantidade=" + quantidade +
+                ", alicota=" + alicota +
+                ", retemImposto=" + retemImposto +
                 ", saldo=" + saldo +
                 ", estornos=" + estornos +
                 ", creditos=" + creditos +

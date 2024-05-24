@@ -18,7 +18,10 @@ public class Producao implements Serializable {
     private BigDecimal creditos;
     private BigDecimal estornos;
     private BigDecimal saldo;
-    private String corretora;
+
+    @ManyToOne
+    @JoinColumn(name="corretora_id", nullable=false)
+    private Corretora corretora;
 
     @ManyToOne
     @JoinColumn(name= "corretor_id", nullable = false)
@@ -27,7 +30,7 @@ public class Producao implements Serializable {
     public Producao() {
     }
 
-    public Producao(Long id, LocalDate data, BigDecimal premioLiquido, BigDecimal creditos, BigDecimal estornos, BigDecimal saldo, String corretora, Corretor corretor) {
+    public Producao(Long id, LocalDate data, BigDecimal premioLiquido, BigDecimal creditos, BigDecimal estornos, BigDecimal saldo, Corretora corretora, Corretor corretor) {
         this.id = id;
         this.data = data;
         this.premioLiquido = premioLiquido;
@@ -94,11 +97,11 @@ public class Producao implements Serializable {
         this.corretor = corretor;
     }
 
-    public String getCorretora() {
+    public Corretora getCorretora() {
         return corretora;
     }
 
-    public void setCorretora(String corretora) {
+    public void setCorretora(Corretora corretora) {
         this.corretora = corretora;
     }
 

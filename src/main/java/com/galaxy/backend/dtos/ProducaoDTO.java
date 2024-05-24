@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 public record ProducaoDTO(
         long corretorId,
-        String corretora,
+        long corretoraId,
         LocalDate data,
         double premioLiquido,
         double creditos,

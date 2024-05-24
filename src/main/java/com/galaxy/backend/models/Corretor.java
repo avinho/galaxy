@@ -16,6 +16,7 @@ public class Corretor implements Serializable {
     private Long id;
     private String name;
     private String email;
+
     @JsonBackReference
     @OneToMany(mappedBy = "corretor")
     private List<Segurado> segurados = new ArrayList<>();

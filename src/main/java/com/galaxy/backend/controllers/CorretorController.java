@@ -9,6 +9,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/corretores")
+@CrossOrigin("*")
 public class CorretorController {
 
     private final CorretorService corretorService;

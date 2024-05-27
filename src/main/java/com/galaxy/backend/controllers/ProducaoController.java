@@ -40,6 +40,12 @@ public class ProducaoController {
         return ResponseEntity.ok(producoes);
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        producaoService.delete(id);
+        return ResponseEntity.ok().build();
+    }
+
     @DeleteMapping("/all")
     public void deleteAll() {
         this.producaoService.deleteAll();

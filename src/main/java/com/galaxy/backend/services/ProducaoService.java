@@ -58,7 +58,7 @@ public class ProducaoService {
             ProducaoDetail producaoDetail = new ProducaoDetail();
             producaoDetail.setProducao(producao);
             producaoDetail.setCorretor(x.corretor());
-            producaoDetail.setSaldo(x.premioLiquido());
+            producaoDetail.setSaldo(x.saldo());
             producaoDetail.setCreditos(x.creditos());
             producaoDetail.setEstornos(x.estornos());
             producaoDetail.setLancamentos(x.lancamentos());

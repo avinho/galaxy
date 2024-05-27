@@ -5,7 +5,6 @@ import com.galaxy.backend.dtos.SaldoCorretorDTO;
 import com.galaxy.backend.models.Corretora;
 import com.galaxy.backend.models.Producao;
 import com.galaxy.backend.models.ProducaoDetail;
-import com.galaxy.backend.repositories.ProducaoDetailRepository;
 import com.galaxy.backend.repositories.ProducaoRepository;
 import com.galaxy.backend.repositories.specifications.ProducaoSpecification;
 import org.springframework.data.jpa.domain.Specification;
@@ -21,18 +20,12 @@ import java.util.List;
 public class ProducaoService {
 
     private final ProducaoRepository producaoRepository;
-    private final ProducaoDetailRepository producaoDetailRepository;
-    private final CorretorService corretorService;
     private final CorretoraService corretoraService;
 
     public ProducaoService(
             ProducaoRepository producaoRepository,
-            CorretorService corretorService,
-            CorretoraService corretoraService,
-            ProducaoDetailRepository producaoDetailRepository) {
+            CorretoraService corretoraService) {
         this.producaoRepository = producaoRepository;
-        this.producaoDetailRepository = producaoDetailRepository;
-        this.corretorService = corretorService;
         this.corretoraService = corretoraService;
     }
 

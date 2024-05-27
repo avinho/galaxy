@@ -19,11 +19,14 @@ import java.util.List;
 
 @Controller
 @RequestMapping("api/uploads")
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class UploadController {
 
-    @Autowired
-    private ReadExcel excelService;
+    private final ReadExcel excelService;
+
+    public UploadController(ReadExcel excelService) {
+        this.excelService = excelService;
+    }
 
     private static final Logger logger = LoggerFactory.getLogger(UploadController.class);
 

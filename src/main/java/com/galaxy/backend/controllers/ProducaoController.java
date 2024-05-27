@@ -1,6 +1,6 @@
 package com.galaxy.backend.controllers;
 
-import com.galaxy.backend.dtos.ProducaoDTO;
+import com.galaxy.backend.dtos.AddProducaoDTO;
 import com.galaxy.backend.models.Producao;
 import com.galaxy.backend.services.ProducaoService;
 import org.springframework.http.HttpStatus;
@@ -12,7 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/financeiro/producao")
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class ProducaoController {
 
     private final ProducaoService producaoService;
@@ -27,8 +27,8 @@ public class ProducaoController {
     }
 
     @PostMapping
-    public ResponseEntity<List<Producao>> save(@RequestBody List<ProducaoDTO> data) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(producaoService.saveAll(data));
+    public ResponseEntity<Producao> add(@RequestBody AddProducaoDTO dto) {
+        return ResponseEntity.ok(producaoService.createProducao(dto));
     }
 
     @GetMapping("/searchBy")
@@ -38,7 +38,7 @@ public class ProducaoController {
             @RequestParam(required = false) LocalDate startDate,
             @RequestParam(required = false) LocalDate endDate) {
 
-        List<Producao> producoes = producaoService.search(corretoraId, corretorId, startDate, endDate);
+        List<Producao> producoes = producaoService.search(corretoraId, startDate, endDate);
         return ResponseEntity.ok(producoes);
     }
 

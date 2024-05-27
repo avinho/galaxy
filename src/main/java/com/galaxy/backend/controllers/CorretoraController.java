@@ -10,7 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/corretoras")
-@CrossOrigin("*")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class CorretoraController {
 
     private final CorretoraService corretoraService;

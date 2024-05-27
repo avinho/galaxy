@@ -15,7 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping( "api/segurados")
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class SeguradoController {
 
     private final SeguradoService seguradoService;

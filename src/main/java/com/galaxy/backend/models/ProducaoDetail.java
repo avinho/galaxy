@@ -1,49 +1,56 @@
 package com.galaxy.backend.models;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 @Entity
-public class Producao implements Serializable {
+public class ProducaoDetail implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private LocalDate data;
     private int lancamentos;
     private BigDecimal premioLiquido;
     private BigDecimal creditos;
     private BigDecimal estornos;
     private BigDecimal saldo;
 
+    @JsonBackReference
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "producao_id", nullable = false)
+    private Producao producao;
+
     @ManyToOne
-    @JoinColumn(name="corretora_id", nullable=false)
-    private Corretora corretora;
+    @JoinColumn(name= "corretor_id", nullable = false)
+    private Corretor corretor;
 
-    @JsonManagedReference
-    @OneToMany(mappedBy = "producao", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ProducaoDetail> producoes =  new ArrayList<>();
-
-    public Producao() {
+    public ProducaoDetail() {
     }
 
-    public Producao(Long id, LocalDate data, Integer lancamentos, BigDecimal premioLiquido, BigDecimal creditos, BigDecimal estornos, BigDecimal saldo, Corretora corretora, List<ProducaoDetail> producoes) {
-        this.id = id;
-        this.data = data;
+    public ProducaoDetail(int lancamentos, BigDecimal premioLiquido, BigDecimal creditos, BigDecimal estornos, BigDecimal saldo, Producao producao, Corretor corretor) {
         this.lancamentos = lancamentos;
         this.premioLiquido = premioLiquido;
         this.creditos = creditos;
         this.estornos = estornos;
         this.saldo = saldo;
-        this.corretora = corretora;
-        this.producoes = producoes;
+        this.producao = producao;
+        this.corretor = corretor;
+    }
+
+    public ProducaoDetail(Long id, Integer lancamentos, BigDecimal premioLiquido, BigDecimal creditos, BigDecimal estornos, BigDecimal saldo, Producao producao, Corretor corretor) {
+        this.id = id;
+        this.lancamentos = lancamentos;
+        this.premioLiquido = premioLiquido;
+        this.creditos = creditos;
+        this.estornos = estornos;
+        this.saldo = saldo;
+        this.producao = producao;
+        this.corretor = corretor;
     }
 
     public Long getId() {
@@ -52,14 +59,6 @@ public class Producao implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public LocalDate getData() {
-        return data;
-    }
-
-    public void setData(LocalDate data) {
-        this.data = data;
     }
 
     public int getLancamentos() {
@@ -102,28 +101,28 @@ public class Producao implements Serializable {
         this.saldo = saldo;
     }
 
-    public Corretora getCorretora() {
-        return corretora;
+    public Producao getProducao() {
+        return producao;
     }
 
-    public void setCorretora(Corretora corretora) {
-        this.corretora = corretora;
+    public void setProducao(Producao producao) {
+        this.producao = producao;
     }
 
-    public List<ProducaoDetail> getProducoes() {
-        return producoes;
+    public Corretor getCorretor() {
+        return corretor;
     }
 
-    public void setProducoes(List<ProducaoDetail> producoes) {
-        this.producoes = producoes;
+    public void setCorretor(Corretor corretor) {
+        this.corretor = corretor;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Producao producao = (Producao) o;
-        return Objects.equals(id, producao.id);
+        ProducaoDetail that = (ProducaoDetail) o;
+        return Objects.equals(id, that.id);
     }
 
     @Override
@@ -133,16 +132,15 @@ public class Producao implements Serializable {
 
     @Override
     public String toString() {
-        return "Producao{" +
+        return "ProducaoDetail{" +
                 "id=" + id +
-                ", data=" + data +
                 ", lancamentos=" + lancamentos +
                 ", premioLiquido=" + premioLiquido +
                 ", creditos=" + creditos +
                 ", estornos=" + estornos +
                 ", saldo=" + saldo +
-                ", corretora=" + corretora +
-                ", producoes=" + producoes +
+                ", producao=" + producao +
+                ", corretor=" + corretor +
                 '}';
     }
 }

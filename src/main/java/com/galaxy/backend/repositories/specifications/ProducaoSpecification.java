@@ -10,10 +10,6 @@ public class ProducaoSpecification {
         return (root, query, cb) -> corretoraId == null ? cb.conjunction() : cb.equal(root.get("corretora").get("id"), corretoraId);
     }
 
-    public static Specification<Producao> byCorretorId(Long corretorId) {
-        return (root, query, cb) -> corretorId == null ? cb.conjunction() : cb.equal(root.get("corretor").get("id"), corretorId);
-    }
-
     public static Specification<Producao> byDataBetween(LocalDate startDate, LocalDate endDate) {
         return (root, query, cb) -> {
             if (startDate == null || endDate == null) {
